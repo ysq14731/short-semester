@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .bg{
+            width: 100%;
+            height: 100%;
+            background-image: url("img/导航背景.png");
+            background-size: 100% 100%;
+            position: relative;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 70px 0 190px 0; 
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        button.submit-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button.submit-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg">
+        <div class="container">
+            <h1>选择题答题页面</h1>
+
+            <div id="quizContainer"></div>
+            <button id="submitBtn" class="submit-btn">提交答案</button>
+            <button id="nextBtn" class="submit-btn" style="display: none;">下一题</button>
+        </div>
+    </div>
+
+    <script>
+        var questions = [
+            {
+                question: "什么是人工智能？",
+                options: ["A. 一种使用计算机和算法来模拟人类智能的科学", "B. 一种使用机器和传感器模拟人类行为的技术", "C. 一种使用大数据和云计算处理信息的方法","D. 一种使用数字化技术进行自动化操作的过程"],
+                answer: 0
+            },
+            {
+                question: "以下哪个不是机器学习算法？",
+                options: ["A. 决策树", "B. 支持向量机", "C. 神经网络","D. 数据库查询语言"],
+                answer: 3
+            },
+            {
+                question: "在人工智能中，什么是强化学习？",
+                options: ["A. 通过训练数据和模式来提高算法性能", "B. 使用统计方法对数据进行分析和推断", "C. 使用反馈信号和奖励来学习最佳决策","D. 使用逻辑推理和推断来解决问题"],
+                answer: 2
+            }
+        ];
+
+        var currentQuestionIndex = 0;  // 当前题目的索引
+
+        function showNextQuestion() {
+            // 如果还有下一题
+            if (currentQuestionIndex < questions.length) {
+                generateQuiz();       // 生成下一个问题界面
+                showSubmitButton();   // 显示提交按钮
+            } else {
+                alert("已经是最后一题了。");
+            }
+        }
+
+        function showSubmitButton() {
+            var submitBtn = document.getElementById("submitBtn");
+            var nextBtn = document.getElementById("nextBtn");
+
+            submitBtn.style.display = "block";
+            nextBtn.style.display = "none";
+        }
+
+        function showNextButton() {
+            var submitBtn = document.getElementById("submitBtn");
+            var nextBtn = document.getElementById("nextBtn");
+
+            submitBtn.style.display = "none";
+            nextBtn.style.display = "block";
+        }
+
+        // 生成答题界面
+        function generateQuiz() {
+            var quizContainer = document.getElementById("quizContainer");
+            quizContainer.innerHTML = "";  // 清空容器
+
+            var questionElement = document.createElement("div");
+            questionElement.classList.add("question");
+
+            var questionText = document.createElement("p");
+            questionText.textContent = questions[currentQuestionIndex].question;
+            questionElement.appendChild(questionText);
+
+            var optionsElement = document.createElement("div");
+            optionsElement.classList.add("options");
+
+            for (var j = 0; j < questions[currentQuestionIndex].options.length; j++) {
+                var optionLabel = document.createElement("label");
+                var optionInput = document.createElement("input");
+                optionInput.setAttribute("type", "radio");
+                optionInput.setAttribute("name", "question" + currentQuestionIndex);
+                optionInput.setAttribute("value", j);
+                optionLabel.appendChild(optionInput);
+                optionLabel.innerHTML += questions[currentQuestionIndex].options[j];
+                optionsElement.appendChild(optionLabel);
+            }
+
+            questionElement.appendChild(optionsElement);
+            quizContainer.appendChild(questionElement);
+        }
+
+        // 计算成绩并显示结果
+        document.getElementById("submitBtn").addEventListener("click", function () {
+            var score = 0;
+            var answerInputs = document.querySelectorAll("input[type=radio]:checked");
+
+            for (var i = 0; i < answerInputs.length; i++) {
+                var questionIndex = parseInt(answerInputs[i].getAttribute("name").substr(8));
+                var selectedOptionIndex = parseInt(answerInputs[i].value);
+
+                if (selectedOptionIndex === questions[questionIndex].answer) {
+                    score++;
+                }
+            }
+
+            showNextButton();  // 显示下一题按钮
+
+            var resultMessage;
+            if (score === questions.length) {
+                resultMessage = "恭喜你，所有题目都回答正确！";
+            } else if (score === 0) {
+                resultMessage = "很遗憾，所有题目都回答错误。";
+            } else {
+                resultMessage = "你回答对了 " + score + " 道题目。";
+            }
+
+            alert(resultMessage);
+        });
+
+        // 显示下一题按钮
+        document.getElementById("nextBtn").addEventListener("click", function () {
+            currentQuestionIndex++;  // 更新当前题目的索引
+            showNextQuestion();
+        });
+
+        // 初始化显示第一题
+        showNextQuestion();
+    </script>
+</body>
+</html>

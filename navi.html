@@ -35,10 +35,53 @@
             background-size: cover;
         }
 
+        button {
+            --color: mediumturquoise;
+            font-family: inherit;
+            display: inline-block;
+            width: 6em;
+            height: 2.6em;
+            line-height: 2.5em;
+            overflow: hidden;
+            margin: 20px;
+            font-size: 17px;
+            z-index: 1;
+            color: var(--color);
+            border: 2px solid var(--color);
+            border-radius: 6px;
+            position: relative;
+            cursor: pointer;
+            }
+
+            button::before {
+            position: absolute;
+            content: "";
+            background: var(--color);
+            width: 150px;
+            height: 200px;
+            z-index: -1;
+            border-radius: 50%;
+            }
+
+            button:hover {
+            color: white;
+            }
+
+            button:before {
+            top: 100%;
+            left: 100%;
+            transition: .3s all;
+            }
+
+            button:hover::before {
+            top: -30px;
+            left: -30px;
+            }
+
         .card{
             position: absolute;
-            width: 220px;
-            height: 320px;
+            width: 200px;
+            height: 280px;
             background: mediumturquoise;
             display: flex;
             align-items: center;
@@ -109,9 +152,10 @@
 <body>
     <div class="bg">
         <div class="contents"></div>
+        <button onclick="window.location.href='star.html'" type="button">返回</button>
         <div class="card c1">人工智能概述</div>
         <div class="card c2">深度学习概述</div>
-        <div class="card c3">学习检测</div>
+        <div class="card c3" onclick="window.location.href='answer.html'" type="button">学习检测</div>
         <div class="card c4">应用案例</div>
     </div>
 </body>
